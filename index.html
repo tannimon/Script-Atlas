@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kana Feature Grid — Mockup</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f4f3ee;
+    --bg-tertiary: #ececea;
+    --text-primary: #1c1c1a;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #908f89;
+    --border: #ddd9d0;
+    --border-strong: #c4c0b6;
+    /* Wordle tile colors */
+    --wordle-green: #6aaa64;
+    --wordle-yellow: #c9b458;
+    --wordle-gray: #787c7e;
+    --wordle-tile-text: #ffffff;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg-secondary: #2c2c2a;
+      --bg-tertiary: #383836;
+      --text-primary: #f1efe8;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --border: #444441;
+      --border-strong: #5f5e5a;
+      /* Wordle's actual dark-mode tile colors */
+      --wordle-green: #538d4e;
+      --wordle-yellow: #b59f3b;
+      --wordle-gray: #3a3a3c;
+      --wordle-tile-text: #ffffff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.5rem 2rem;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0 0 1.25rem;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 1rem;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    font-size: 14px;
+  }
+  th.place-h {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 6px 4px;
+    text-align: center;
+  }
+  .manner-label {
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 6px 8px;
+    white-space: nowrap;
+    width: 110px;
+  }
+  td.cell {
+    text-align: center;
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .kana-btn {
+    width: 100%;
+    height: 48px;
+    font-size: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .kana-btn:hover {
+    border-color: var(--border-strong);
+    background: var(--bg-tertiary);
+  }
+  .empty-cell {
+    color: var(--text-tertiary);
+    font-size: 12px;
+  }
+  .target-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 1.5rem 0 0.5rem;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .target-hint {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 400;
+  }
+  .box-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .guess-box {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    cursor: pointer;
+  }
+  .feedback-box {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+  }
+  .tile-green {
+    background: var(--wordle-green);
+    color: var(--wordle-tile-text);
+  }
+  .tile-yellow {
+    background: var(--wordle-yellow);
+    color: var(--wordle-tile-text);
+  }
+  .tile-gray {
+    background: var(--wordle-gray);
+    color: var(--wordle-tile-text);
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0 0 1rem;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  button.action {
+    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-strong);
+    background: var(--bg);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  button.action:hover {
+    background: var(--bg-tertiary);
+  }
+  .toggle-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    cursor: pointer;
+  }
+  .toggle-label input {
+    width: 16px;
+    height: 16px;
+  }
+  .explain {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem;
+    min-height: 1.4em;
+  }
+  .divider {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+  }
+  .q-note {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 8px;
+  }
+  .q-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .q-item {
+    text-align: left;
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+  .q-item b { font-weight: 600; }
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>Kana feature grid — pilot dataset</h1>
+  <p class="subtitle">Mockup, not final. Rows = manner of articulation. Columns = place. Click cells to build a guess.</p>
+
+  <div style="overflow-x:auto;">
+    <table id="grid">
+      <thead>
+        <tr>
+          <th style="width:110px;"></th>
+          <th class="place-h">Bilabial</th>
+          <th class="place-h">Alveolar</th>
+          <th class="place-h">Velar</th>
+          <th class="place-h">Glottal</th>
+        </tr>
+      </thead>
+      <tbody id="grid-body"></tbody>
+    </table>
+  </div>
+
+  <div class="target-row">
+    <span>Today's guess</span>
+    <span class="target-hint">(click kana above to fill)</span>
+  </div>
+  <div class="box-row" id="guess-row"></div>
+
+  <div class="controls">
+    <button class="action" id="check-btn">Check guess</button>
+    <button class="action" id="clear-btn">Clear</button>
+    <label class="toggle-label">
+      <input type="checkbox" id="feature-mode">
+      Feature-level feedback
+    </label>
+  </div>
+
+  <div class="box-row" id="feedback-row"></div>
+  <div class="legend" id="legend"></div>
+  <p class="explain" id="feedback-explain"></p>
+
+  <div class="divider">
+    <p class="q-note">Open questions this mockup is meant to surface:</p>
+    <div class="q-list">
+      <div class="q-item"><b>Q31</b> — should feedback color by whole character, or by individual phonological feature (place / manner / voicing)?</div>
+      <div class="q-item"><b>Q26</b> — does composing a sound from clicked feature regions need a chord-like simultaneous click, or is sequential click-then-click fine?</div>
+      <div class="q-item"><b>Q18</b> — is this grid the actual game board, or just a reference/learning view separate from gameplay?</div>
+    </div>
+  </div>
+
+  <footer>Working mockup — Writing System Familiarization Engine project</footer>
+</div>
+
+<script>
+const PLACES = ['bilabial','alveolar','velar','glottal'];
+const ROWS = [
+  { manner: 'stop/affricate', cells: {
+      bilabial: {char:'は', romaji:'ha', voicing:'voiceless'},
+      alveolar: {char:'た', romaji:'ta', voicing:'voiceless'},
+      velar: {char:'か', romaji:'ka', voicing:'voiceless'},
+      glottal: null } },
+  { manner: 'nasal', cells: {
+      bilabial: {char:'ま', romaji:'ma', voicing:'voiced'},
+      alveolar: {char:'な', romaji:'na', voicing:'voiced'},
+      velar: null,
+      glottal: null } },
+  { manner: 'fricative', cells: {
+      bilabial: null,
+      alveolar: {char:'さ', romaji:'sa', voicing:'voiceless'},
+      velar: null,
+      glottal: {char:'あ', romaji:'a', voicing:'voiced'} } },
+  { manner: 'liquid', cells: {
+      bilabial: null,
+      alveolar: {char:'ら', romaji:'ra', voicing:'voiced'},
+      velar: null,
+      glottal: null } }
+];
+const TARGET = ['さ','ま','ら','は'];
+
+let guess = [null, null, null, null];
+
+function buildGrid(){
+  const body = document.getElementById('grid-body');
+  body.innerHTML = '';
+  ROWS.forEach(row => {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.textContent = row.manner;
+    th.className = 'manner-label';
+    tr.appendChild(th);
+    PLACES.forEach(place => {
+      const td = document.createElement('td');
+      td.className = 'cell';
+      const cell = row.cells[place];
+      if (cell) {
+        const btn = document.createElement('button');
+        btn.textContent = cell.char;
+        btn.className = 'kana-btn';
+        btn.title = cell.romaji + ' (' + cell.voicing + ', ' + row.manner + ', ' + place + ')';
+        btn.onclick = () => addToGuess(cell.char);
+        td.appendChild(btn);
+      } else {
+        const span = document.createElement('span');
+        span.className = 'empty-cell';
+        span.textContent = '—';
+        td.appendChild(span);
+      }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+}
+
+function addToGuess(char){
+  const idx = guess.findIndex(g => g === null);
+  if (idx === -1) return;
+  guess[idx] = char;
+  renderGuess();
+}
+
+function renderGuess(){
+  const row = document.getElementById('guess-row');
+  row.innerHTML = '';
+  guess.forEach((g, i) => {
+    const box = document.createElement('div');
+    box.className = 'guess-box';
+    box.textContent = g || '';
+    box.onclick = () => {
+      guess[i] = null;
+      renderGuess();
+      document.getElementById('feedback-row').innerHTML = '';
+      document.getElementById('feedback-explain').textContent = '';
+    };
+    row.appendChild(box);
+  });
+}
+
+function getFeatureMap(char){
+  for (const row of ROWS) {
+    for (const place of PLACES) {
+      const c = row.cells[place];
+      if (c && c.char === char) return { place, manner: row.manner, voicing: c.voicing };
+    }
+  }
+  return null;
+}
+
+function renderLegend(featureMode){
+  const legend = document.getElementById('legend');
+  if (!featureMode) {
+    legend.innerHTML =
+      '<div class="legend-item"><span class="legend-swatch tile-green"></span>exact character match</div>' +
+      '<div class="legend-item"><span class="legend-swatch tile-gray"></span>no match</div>' +
+      '<div class="legend-item" style="color:var(--text-tertiary);">(no yellow — character mode has no "wrong position" concept)</div>';
+  } else {
+    legend.innerHTML =
+      '<div class="legend-item"><span class="legend-swatch tile-green"></span>all 3 features match</div>' +
+      '<div class="legend-item"><span class="legend-swatch tile-yellow"></span>1&ndash;2 features match</div>' +
+      '<div class="legend-item"><span class="legend-swatch tile-gray"></span>0 features match</div>';
+  }
+}
+
+function check(){
+  if (guess.some(g => g === null)) return;
+  const featureMode = document.getElementById('feature-mode').checked;
+  const row = document.getElementById('feedback-row');
+  row.innerHTML = '';
+  let explain = [];
+  renderLegend(featureMode);
+
+  guess.forEach((g, i) => {
+    const box = document.createElement('div');
+    box.className = 'feedback-box';
+    const target = TARGET[i];
+
+    if (!featureMode) {
+      const exact = g === target;
+      box.textContent = g;
+      box.classList.add(exact ? 'tile-green' : 'tile-gray');
+    } else {
+      const gf = getFeatureMap(g);
+      const tf = getFeatureMap(target);
+      let score = 0;
+      if (gf && tf) {
+        if (gf.place === tf.place) score++;
+        if (gf.manner === tf.manner) score++;
+        if (gf.voicing === tf.voicing) score++;
+      }
+      box.textContent = g;
+      if (score === 3) {
+        box.classList.add('tile-green');
+      } else if (score === 0) {
+        box.classList.add('tile-gray');
+      } else {
+        box.classList.add('tile-yellow');
+        explain.push(g + ': ' + score + '/3 features match');
+      }
+    }
+    row.appendChild(box);
+  });
+
+  document.getElementById('feedback-explain').textContent = featureMode
+    ? (explain.length ? explain.join(' · ') : 'No partial matches this guess — every tile is green or gray.')
+    : 'Character mode: green only on an exact character match — no partial credit, so no yellow.';
+}
+
+document.getElementById('check-btn').onclick = check;
+document.getElementById('clear-btn').onclick = () => {
+  guess = [null, null, null, null];
+  renderGuess();
+  document.getElementById('feedback-row').innerHTML = '';
+  document.getElementById('feedback-explain').textContent = '';
+  document.getElementById('legend').innerHTML = '';
+};
+document.getElementById('feature-mode').onchange = () => {
+  document.getElementById('feedback-row').innerHTML = '';
+  document.getElementById('feedback-explain').textContent = '';
+  document.getElementById('legend').innerHTML = '';
+};
+
+buildGrid();
+renderGuess();
+</script>
+
+</body>
+</html>
